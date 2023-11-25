@@ -17,8 +17,8 @@ class Curso(Base):
     url = models.URLField(unique=True)
 
     class Meta:
-        verbose_name = _'Curso'
-        verbose_name_plural = _'Cursos'
+        verbose_name = 'Curso'
+        verbose_name_plural = 'Cursos'
 
     def __str__(self):
         return self.titulo
