@@ -4,41 +4,29 @@ from .serializers import CursoSerializer, AvaliacaoSerializer
 from rest_framework.generics import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import viewsets, mixins
 # Create your views here.
 
 
-class CursosAPIView(generics.ListCreateAPIView):
+class CursoViewset(viewsets.ModelViewSet):
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
 
+    @action(detail=True, methods=['get'])
+    def avaliacoes(self, request, pk=None):
+        curso = self.get_object()
+        serializer = AvaliacaoSerializer(curso.avaliacoes.all(), many=True)
+        return Response(serializer.data)
 
-class CursoAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Curso.objects.all()
-    serializer_class = CursoSerializer
 
-
-class AvaliacoesAPIView(generics.ListCreateAPIView):
+'''ViewSet Padrao
+class AvaliacaoViewset(viewsets.ModelViewSet):
     queryset = Avaliacao.objects.all()
     serializer_class = AvaliacaoSerializer
-    print(queryset[0].curso)
-
-    def get_queryset(self):
-        lista = []
-        if self.kwargs.get('curso_pk'):
-            for q in self.queryset.all():
-                if q.curso.id == self.kwargs.get('curso_pk'):
-                    lista.append(q)
-            if len(lista) > 0:
-                return lista
-            # return self.queryset.filter(curso_id == self.kwargs.get('curso_pk'))
-        return self.queryset.all()
+'''
+# ViewSet Customizada
 
 
-class AvaliacaoAPIView(generics.RetrieveUpdateDestroyAPIView):
+class AvaliacaoViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = Avaliacao.objects.all()
     serializer_class = AvaliacaoSerializer
-
-    def get_object(self):
-        if self.kwargs.get('curso_pk'):
-            return get_object_or_404(self.get_queryset(), curso_id=self.kwargs.get['curso_pk'], pk=self.kwargs.get('avaliacao_pk'))
-        return get_object_or_404(self.get_queryset(), pk=self.kwargs.get('avaliacao_pk'))
