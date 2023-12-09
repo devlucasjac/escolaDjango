@@ -22,6 +22,17 @@ class AvaliacaoSerializer(serializers.ModelSerializer):
 
 
 class CursoSerializer(serializers.ModelSerializer):
+    # As relaçoes entre tabelas podem ser mostradas de diferentes maneiras como se segue abaixo:
+
+    # 1. Nested Relationship:(Este mostra todos os dados da tabela relacionada a esta)
+    # avaliacoes = AvaliacaoSerializer(many=True, read_only=True)
+
+    # 2. Hyperlinked Related Fields(Este mostra um link que leva a tabela relacionada):
+    '''avaliacoes = serializers.HyperlinkedRelatedField(
+        many=True, read_only=True, view_name='avaliacao-detail')'''
+
+    # 3. Primary Key Related Fields(Este mostra a primary key da tabela relacionada):
+    avaliacoes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Curso
@@ -30,5 +41,6 @@ class CursoSerializer(serializers.ModelSerializer):
             'titulo',
             'url',
             'criacao',
-            'ativo'
+            'ativo',
+            'avaliacoes'
         ]
