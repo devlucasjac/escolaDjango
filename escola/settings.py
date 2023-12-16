@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "cursos",
-    "rest_framework"
+    "rest_framework",
+    "rest_framework.authtoken",  # Abilita a autenticação via token
 ]
 
 MIDDLEWARE = [
@@ -125,6 +126,12 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Para se fazer a paginação em rest framework é nescessario inserir este parametro no arquivo setings
 REST_FRAMEWORK = {
+    # Aqui é declarado o metodo de autenticação por token
+    # Apos se alterar o arquivo settings é nescessario executar o comando migrate para
+    # se salvar as alterações
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
+    # Aqui se declara quais permissões são nescessárias para se acessar determinado serviço
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 1
 }

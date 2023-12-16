@@ -7,6 +7,15 @@ from rest_framework.response import Response
 from rest_framework import viewsets, mixins
 # Create your views here.
 
+# O token é criado dessa maneira:
+# from django.contri.auth.models import User // importa-se a tabela user do django
+# from rest_framework.authtoken.models import Token // importa-se o objeto token de rest_framework
+#
+# lucas = User.objects.get(id=1) // seleciona-se o usuario
+# token = Token.objects.create(user=lucas) // e cria-se o token a partir do usuario
+# o token criado ficará dessa maneira:
+# Token: a9ebfe556bd3620d71769fbc521d536a36f27117 // a9ebfe556bd3620d71769fbc521d536a36f27117
+
 
 class CursoViewset(viewsets.ModelViewSet):
     queryset = Curso.objects.all()
