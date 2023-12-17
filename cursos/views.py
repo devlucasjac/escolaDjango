@@ -5,6 +5,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, mixins
+from rest_framework import permissions
+from .permissions import IsSuperUser
 # Create your views here.
 
 # O token é criado dessa maneira:
@@ -16,10 +18,18 @@ from rest_framework import viewsets, mixins
 # o token criado ficará dessa maneira:
 # Token: a9ebfe556bd3620d71769fbc521d536a36f27117 // a9ebfe556bd3620d71769fbc521d536a36f27117
 
+# Como essa viewset apresenta permissões locais estas se sobrepõe as permissões globais
+
 
 class CursoViewset(viewsets.ModelViewSet):
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
+
+    # permisões locais (modelo 1):
+    # permission_classes = (permissions.DjangoModelPermissions,)
+
+    # Este segundo modelo de permissoes locais abrange pontos mais especificos para a permissibilidade
+    permission_classes = (IsSuperUser, permissions.DjangoModelPermissions,)
 
     @action(detail=True, methods=['get'])
     def avaliacoes(self, request, pk=None):
@@ -43,7 +53,9 @@ class AvaliacaoViewset(viewsets.ModelViewSet):
 '''
 # ViewSet Customizada
 
+# Já esta viewset por não apresentar permissões locais esta relegada apenas as permissões globais
 
-class AvaliacaoViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+
+class AvaliacaoViewset(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = Avaliacao.objects.all()
     serializer_class = AvaliacaoSerializer
