@@ -133,5 +133,13 @@ REST_FRAMEWORK = {
     # Aqui se declara quais permissões são nescessárias para se acessar determinado serviço
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 1
+    'PAGE_SIZE': 1,
+    # Aqui é declarado o metodo de throttling para o limite de acesso da API
+    'DEFAULT_THROTTLE_CLASSES': ('rest_framework.throttling.AnonRateThrottle',
+                                 'rest_framework.throttling.UserRateThrottle'),
+    # Aqui se declara a quantidade de acessos por minuto que cada cliente tera
+    'DEFAULT_THROTTLE_RATES': (
+        'anon': '2/minute',
+        'user': '3/minute'
+    )
 }
